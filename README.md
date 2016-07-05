@@ -6,7 +6,6 @@
 2. 勾选maven配置为debug
 3. 添加启动器，指定为Application
 4. 修改 Main class:org.darkgem.jetty.Launcher
-5. 修改Before launch->Run Maven command 'test'
 
 
 ## Server设计原则

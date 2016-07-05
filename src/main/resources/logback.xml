@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-    <property resource="project.properties" />
     <!-- ERROR日志 -->
     <appender name="FILE_OUT" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${logback-file}/log.log</file>

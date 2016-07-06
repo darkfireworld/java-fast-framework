@@ -28,6 +28,11 @@
                 <email-account>service@darkgem.org</email-account>
                 <email-smtp>this</email-smtp>
             </properties>
+            <!--激活属性-->
+            <activation>
+                <!--默认激活-->
+                <activeByDefault>true</activeByDefault>
+            </activation>
         </profile>
         <profile>
             <id>release</id>

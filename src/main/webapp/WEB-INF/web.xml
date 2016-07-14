@@ -31,13 +31,28 @@
         <async-supported>false</async-supported>
         <load-on-startup>1</load-on-startup>
     </servlet>
+
     <servlet-mapping>
         <servlet-name>springMVC</servlet-name>
-        <url-pattern>*.do</url-pattern>
+        <url-pattern>/</url-pattern>
     </servlet-mapping>
 
+    <!--index 配置-->
     <welcome-file-list>
         <welcome-file>/index.html</welcome-file>
     </welcome-file-list>
 
+    <!--error-page 配置-->
+    <error-page>
+        <exception-type>java.lang.Exception</exception-type>
+        <location>/exception.html</location>
+    </error-page>
+    <error-page>
+        <error-code>404</error-code>
+        <location>/404.html</location>
+    </error-page>
+    <error-page>
+        <error-code>500</error-code>
+        <location>/500.html</location>
+    </error-page>
 </web-app>

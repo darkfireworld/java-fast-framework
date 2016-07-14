@@ -3,7 +3,7 @@ package org.darkgem.web.support.msg;
 /**
  * 通用的错误代码, 为<strong>负整数</strong>
  */
-public enum GeneralErrorCode {
+public enum MessageErrorCode {
     /**
      * 服务器错误,错误代码code:-1
      *
@@ -23,7 +23,7 @@ public enum GeneralErrorCode {
 
     int value = 0;
 
-    GeneralErrorCode(int i) {
+    MessageErrorCode(int i) {
         this.value = i;
     }
 

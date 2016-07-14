@@ -4,6 +4,7 @@
        xmlns:aop="http://www.springframework.org/schema/aop"
        xmlns:tx="http://www.springframework.org/schema/tx"
        xmlns:task="http://www.springframework.org/schema/task"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
        xmlns="http://www.springframework.org/schema/beans"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
             http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
@@ -16,134 +17,70 @@
             http://www.springframework.org/schema/context
             http://www.springframework.org/schema/context/spring-context-3.0.xsd
             http://www.springframework.org/schema/task
-            http://www.springframework.org/schema/task/spring-task-3.0.xsd">
+            http://www.springframework.org/schema/task/spring-task-3.0.xsd
+            http://www.springframework.org/schema/mvc
+            http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd">
     <!-- 开启AOP-->
     <aop:aspectj-autoproxy proxy-target-class="true"/>
     <!--开启任务-->
-    <task:annotation-driven scheduler="spring-scheduler"
-                            executor="spring-executor"
-                            mode="proxy"/>
+    <task:annotation-driven scheduler="spring-scheduler" executor="spring-executor" mode="proxy"/>
     <!--周期线程池-->
-    <task:scheduler id="spring-scheduler"
-                    pool-size="1"/>
+    <task:scheduler id="spring-scheduler" pool-size="1"/>
     <!--通用执行器-->
-    <task:executor id="spring-executor"
-                   keep-alive="8"
-                   pool-size="80"/>
-
+    <task:executor id="spring-executor" keep-alive="8" pool-size="80"/>
     <!--扫描-->
     <context:component-scan base-package="org.darkgem"/>
 
     <!--数据部分-->
     <!--数据源-->
-    <bean id="dataSource"
-          class="com.alibaba.druid.pool.DruidDataSource"
-          init-method="init"
-          destroy-method="close">
-
-
-        <property name="driverClassName"
-                  value="${jdbc-class}"/>
-        <property name="url"
-                  value="${jdbc-url}"/>
-        <property name="username"
-                  value="${jdbc-username}"/>
-        <property name="password"
-                  value="${jdbc-password}"/>
-        <property name="filters"
-                  value="log4j"/>
+    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
+        <property name="driverClassName" value="${jdbc-class}"/>
+        <property name="url" value="${jdbc-url}"/>
+        <property name="username" value="${jdbc-username}"/>
+        <property name="password" value="${jdbc-password}"/>
+        <property name="filters" value="log4j"/>
         <property name="proxyFilters">
             <list>
                 <ref bean="stat-filter"/>
             </list>
         </property>
-        <property name="maxActive"
-                  value="${jdbc-max-active}"/>
-        <property name="initialSize"
-                  value="${jdbc-initial-size}"/>
-        <property name="minIdle"
-                  value="${jdbc-min-idle}"/>
-        <property name="maxWait"
-                  value="60000"/>
-        <property name="timeBetweenEvictionRunsMillis"
-                  value="3000"/>
-        <property name="minEvictableIdleTimeMillis"
-                  value="300000"/>
-        <property name="validationQuery"
-                  value="SELECT 'x'"/>
-        <property name="testWhileIdle"
-                  value="true"/>
-        <property name="testOnBorrow"
-                  value="false"/>
-        <property name="testOnReturn"
-                  value="false"/>
+        <property name="maxActive" value="${jdbc-max-active}"/>
+        <property name="initialSize" value="${jdbc-initial-size}"/>
+        <property name="minIdle" value="${jdbc-min-idle}"/>
+        <property name="maxWait" value="60000"/>
+        <property name="timeBetweenEvictionRunsMillis" value="3000"/>
+        <property name="minEvictableIdleTimeMillis" value="300000"/>
+        <property name="validationQuery" value="SELECT 'x'"/>
+        <property name="testWhileIdle" value="true"/>
+        <property name="testOnBorrow" value="false"/>
+        <property name="testOnReturn" value="false"/>
     </bean>
     <!--JDBC监控选项-->
-    <bean id="stat-filter"
-          class="com.alibaba.druid.filter.stat.StatFilter">
+    <bean id="stat-filter" class="com.alibaba.druid.filter.stat.StatFilter">
         <!--合并sql-->
-        <property name="mergeSql"
-                  value="true"/>
+        <property name="mergeSql" value="true"/>
         <!--慢SQl时间配置-->
-        <property name="slowSqlMillis"
-                  value="1000"/>
+        <property name="slowSqlMillis" value="1000"/>
         <!--是否记录慢sql-->
-        <property name="logSlowSql"
-                  value="true"/>
-    </bean>
-    <!--JDBC-->
-    <bean class="org.springframework.jdbc.core.JdbcTemplate">
-        <constructor-arg ref="dataSource"/>
+        <property name="logSlowSql" value="true"/>
     </bean>
     <!--事务性-->
     <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-        <property name="dataSource"
-                  ref="dataSource"/>
+        <property name="dataSource" ref="dataSource"/>
     </bean>
     <tx:annotation-driven order="200"/>
+    <!--mybatis -->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource" />
+        <property name="typeHandlersPackage" value="org.darkgem.io"/>
+    </bean>
+    <!--mapper-->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="org.darkgem.io" />
+    </bean>
 
-    <!--MVC 部分-->
-    <!--异常处理-->
-    <bean class="org.darkgem.web.support.exception.ExceptionHandler"/>
-    <!-- 不使用默认的HandlerMapping-->
-    <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping">
-        <!--拦截器-->
-        <property name="interceptors">
-            <list>
-            </list>
-        </property>
-    </bean>
-    <!--文件上传配置-->
-    <bean id="multipartResolver"
-          class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
-        <!-- 设置上传文件的最大尺寸为512KB -->
-        <property name="maxUploadSize">
-            <value>524288</value>
-        </property>
-    </bean>
-    <!-- Adapter -->
-    <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
-        <property name="customArgumentResolvers">
-            <!--自定义 参数注入-->
-            <list>
-                <bean class="org.darkgem.web.support.token.TokenResolver"/>
-            </list>
-        </property>
-    </bean>
-    <!--视图解析-->
-    <bean class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
-        <property name="order"
-                  value="1"/>
-        <property name="defaultViews">
-            <list>
-                <!-- JSON View -->
-                <bean class="org.darkgem.web.support.view.FastJsonJsonView">
-                    <property name="extractValueFromSingleKeyModel"
-                              value="true"/>
-                </bean>
-            </list>
-        </property>
-    </bean>
+
+    <!--组件模块-->
     <!--邮箱-->
     <bean class="org.darkgem.io.mail.MailIo">
         <property name="email" value="${email-account}"/>
@@ -154,4 +91,45 @@
         <property name="url" value="${fs}"/>
     </bean>
 
+    <!--Spring MVC-->
+    <!--文件上传配置-->
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <!-- 设置上传文件的最大尺寸为512KB -->
+        <property name="maxUploadSize">
+            <value>524288</value>
+        </property>
+    </bean>
+    <!--HandlerMapping-->
+    <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping">
+        <!--拦截器-->
+        <property name="interceptors">
+            <list>
+            </list>
+        </property>
+    </bean>
+    <!-- Adapter -->
+    <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
+        <!--参数解析器-->
+        <property name="customArgumentResolvers">
+            <list>
+                <bean class="org.darkgem.web.support.handler.TokenHandler"/>
+            </list>
+        </property>
+    </bean>
+    <!--默认静态资源-->
+    <mvc:default-servlet-handler />
+    <!--视图解析-->
+    <bean class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
+        <property name="order" value="1"/>
+        <property name="defaultViews">
+            <list>
+                <!-- *.json -->
+                <bean class="com.alibaba.fastjson.support.spring.FastJsonJsonView">
+                    <property name="extractValueFromSingleKeyModel" value="true"/>
+                </bean>
+            </list>
+        </property>
+    </bean>
+    <!--Message Exception-->
+    <bean class="org.darkgem.web.support.msg.MessageExceptionHandler"/>
 </beans>

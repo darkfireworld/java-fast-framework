@@ -1,25 +1,23 @@
 package org.darkgem.web.mvc.main;
 
-import com.alibaba.fastjson.JSONObject;
+import org.darkgem.io.article.Article;
+import org.darkgem.io.article.ArticleIo;
+import org.darkgem.web.support.handler.Token;
 import org.darkgem.web.support.msg.Message;
-import org.darkgem.web.support.token.Token;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping("/main/MainCtrl")
 public class MainCtrl {
     @Autowired
-    JdbcTemplate template;
+    ArticleIo articleIo;
 
-
-    @RequestMapping("/ask.do")
+    @Transactional
+    @RequestMapping("/ask")
     public Object ask(@Token String token) {
-        JSONObject ret = new JSONObject();
-        ret.put("token", token);
-        ret.put("query", template.queryForList("SELECT * FROM test"));
-        return Message.okMessage(ret);
+        return Message.okMessage(articleIo.selectList(token, Article.Type.IT));
     }
 }

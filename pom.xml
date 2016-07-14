@@ -71,12 +71,27 @@
         <okhttp3-version>3.2.0</okhttp3-version>
         <aspectjrt-version>1.5.4</aspectjrt-version>
         <poi-version>3.14</poi-version>
-        <jetty-version>9.3.8.RC0</jetty-version>
+        <jetty-version>9.3.10.v20160621</jetty-version>
         <junit-version>4.12</junit-version>
+        <mybatis-version>3.4.1</mybatis-version>
+        <mybatis-spring-version>1.3.0</mybatis-spring-version>
     </properties>
 
     <!--依赖-->
     <dependencies>
+
+        <!--mybatis-->
+        <dependency>
+            <groupId>org.mybatis</groupId>
+            <artifactId>mybatis</artifactId>
+            <version>${mybatis-version}</version>
+        </dependency>
+        <!--mybatis-spring -->
+        <dependency>
+            <groupId>org.mybatis</groupId>
+            <artifactId>mybatis-spring</artifactId>
+            <version>${mybatis-spring-version}</version>
+        </dependency>
 
         <!-- https://mvnrepository.com/artifact/junit/junit -->
         <dependency>
@@ -324,6 +339,14 @@
     <build>
         <!--处理资源文件-->
         <resources>
+            <!--拷贝所有的非Java文件-->
+            <resource>
+                <directory>src/main/java</directory>
+                <filtering>false</filtering>
+                <excludes>
+                    <exclude>**/*.java</exclude>
+                </excludes>
+            </resource>
             <!-- src/main/resources 下所有 xml 文件：需要变量替换 -->
             <resource>
                 <!--资源目录-->

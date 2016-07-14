@@ -18,28 +18,19 @@ USE `test`;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `test`
+-- Table structure for table `t_article`
 --
 
-DROP TABLE IF EXISTS `test`;
+DROP TABLE IF EXISTS `t_article`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `test` (
+CREATE TABLE `t_article` (
   `id` varchar(45) NOT NULL,
-  `content` longtext NOT NULL,
+  `content` text NOT NULL,
+  `type` enum('LIFE','IT') NOT NULL DEFAULT 'IT',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `test`
---
-
-LOCK TABLES `test` WRITE;
-/*!40000 ALTER TABLE `test` DISABLE KEYS */;
-INSERT INTO `test` VALUES ('1','文章1'),('2','文章2');
-/*!40000 ALTER TABLE `test` ENABLE KEYS */;
-UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -50,4 +41,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-03-03 20:51:04
+-- Dump completed on 2016-07-14 11:15:32

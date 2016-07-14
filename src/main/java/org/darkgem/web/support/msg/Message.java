@@ -5,7 +5,7 @@ package org.darkgem.web.support.msg;
  * Logic 服务器交互交口
  * <ul>
  * <strong>错误代码</strong>
- * <li>1.通用错误代码按负数排序{@link GeneralErrorCode}</li>
+ * <li>1.通用错误代码按负数排序{@link MessageErrorCode}</li>
  * <li>2.正确执行为0</li>
  * <li>3.自定义错误为正数</li>
  * </ul>
@@ -38,10 +38,10 @@ public class Message {
     /**
      * 通用错误代码
      *
-     * @param code 错误代码{@link GeneralErrorCode}
+     * @param code 错误代码{@link MessageErrorCode}
      * @param msg  错误信息
      */
-    private Message(GeneralErrorCode code, Object msg) {
+    private Message(MessageErrorCode code, Object msg) {
         this.code = code.value();
         if (this.code >= 0) {
             throw new RuntimeException("构造函数的Code 必须要小于 0");
@@ -71,10 +71,10 @@ public class Message {
     /**
      * 通用错误代码
      *
-     * @param code 通用错误代码{@link GeneralErrorCode}
+     * @param code 通用错误代码{@link MessageErrorCode}
      * @param msg  提示信息
      */
-    public static Message generalErrorMessage(GeneralErrorCode code, Object msg) {
+    public static Message generalErrorMessage(MessageErrorCode code, Object msg) {
         return new Message(code, msg);
     }
 
@@ -93,7 +93,7 @@ public class Message {
     /**
      * 是否是成功的消息
      */
-    public boolean isOk() {
+    public boolean ok() {
         return code == 0;
     }
 
@@ -132,4 +132,5 @@ public class Message {
     public void setMsg(Object msg) {
         this.msg = msg;
     }
+
 }

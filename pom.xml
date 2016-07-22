@@ -19,9 +19,6 @@
                 <jdbc-url>jdbc:mysql://localhost:3306/test?useUnicode=true&amp;amp;characterEncoding=UTF-8</jdbc-url>
                 <jdbc-username>root</jdbc-username>
                 <jdbc-password>root</jdbc-password>
-                <jdbc-max-active>10</jdbc-max-active>
-                <jdbc-initial-size>5</jdbc-initial-size>
-                <jdbc-min-idle>1</jdbc-min-idle>
                 <logback-file>/var/log/web</logback-file>
                 <logback-level>debug</logback-level>
                 <fs>http://fs.com</fs>
@@ -42,9 +39,6 @@
                 <jdbc-url>jdbc:mysql://localhost:3306/test?useUnicode=true&amp;amp;characterEncoding=UTF-8</jdbc-url>
                 <jdbc-username>root</jdbc-username>
                 <jdbc-password>root</jdbc-password>
-                <jdbc-max-active>10</jdbc-max-active>
-                <jdbc-initial-size>5</jdbc-initial-size>
-                <jdbc-min-idle>1</jdbc-min-idle>
                 <logback-file>/var/log/web</logback-file>
                 <logback-level>error</logback-level>
                 <fs>http://fs.com</fs>
@@ -347,27 +341,19 @@
                     <exclude>**/*.java</exclude>
                 </excludes>
             </resource>
-            <!-- src/main/resources 下所有 xml 文件：需要变量替换 -->
-            <resource>
-                <!--资源目录-->
-                <directory>src/main/resources</directory>
-                <!--开启Token替换-->
-                <filtering>true</filtering>
-                <!--仅仅支持xml替换，所以配置文件统一为*.xml-->
-                <includes>
-                    <include>**/*.xml</include>
-                </includes>
-            </resource>
-            <!-- src/main/resources 下所有非 xml 文件：原样拷贝，不进行变量替换 -->
+            <!-- src/main/resources-->
             <resource>
                 <!--资源目录-->
                 <directory>src/main/resources</directory>
                 <!--不开启Token替换-->
                 <filtering>false</filtering>
-                <!--所有非xml-->
-                <excludes>
-                    <exclude>**/*.xml</exclude>
-                </excludes>
+            </resource>
+            <!-- src/main/token -->
+            <resource>
+                <!--资源目录-->
+                <directory>src/main/token</directory>
+                <!--开启Token替换-->
+                <filtering>true</filtering>
             </resource>
         </resources>
         <!--插件-->

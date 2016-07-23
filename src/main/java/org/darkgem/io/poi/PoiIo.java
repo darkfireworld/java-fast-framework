@@ -1,6 +1,6 @@
 package org.darkgem.io.poi;
 
-import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -54,20 +55,31 @@ public class PoiIo {
                 String val = null;
                 //根据cell中的类型来输出数据
                 switch (cell.getCellType()) {
-                    case HSSFCell.CELL_TYPE_NUMERIC:
-                        double number = cell.getNumericCellValue();
-                        if (number == (int) number) {
-                            //整数
-                            val = String.valueOf((int) number);
+                    case Cell.CELL_TYPE_NUMERIC:
+                        //处理Date类型
+                        if (HSSFDateUtil.isCellDateFormatted(cell)) {
+                            //获取成DATE类型
+                            Date dt = HSSFDateUtil.getJavaDate(cell.getNumericCellValue());
+                            //转换为long类型
+                            val = String.valueOf(dt.getTime());
                         } else {
-                            //包含小数的double
-                            val = String.valueOf(cell.getNumericCellValue());
+                            double number = cell.getNumericCellValue();
+                            if (number == (int) number) {
+                                //整数
+                                val = String.valueOf((int) number);
+                            } else if (number == (long) number) {
+                                //long类型
+                                val = String.valueOf((long) number);
+                            } else {
+                                //包含小数的double
+                                val = String.valueOf(cell.getNumericCellValue());
+                            }
                         }
                         break;
-                    case HSSFCell.CELL_TYPE_STRING:
+                    case Cell.CELL_TYPE_STRING:
                         val = cell.getStringCellValue();
                         break;
-                    case HSSFCell.CELL_TYPE_BOOLEAN:
+                    case Cell.CELL_TYPE_BOOLEAN:
                         val = String.valueOf(cell.getBooleanCellValue());
                         break;
                 }
@@ -77,13 +89,17 @@ public class PoiIo {
                     if (cell.getColumnIndex() > (maxColumnNum - 1)) {
                         throw new IndexOutOfBoundsException(String.format("column num out of define max column num %s", String.valueOf(maxColumnNum)));
                     }
-                    retRow[cell.getColumnIndex()] = val.trim();
+                    val = val.trim();
+                    //避免空字符串
+                    if (!"".equals(val)) {
+                        retRow[cell.getColumnIndex()] = val;
+                    }
                 }
             }
             //检测，所有的数据是否都为null，如果是，则忽略
             boolean pass = false;
             for (String v : retRow) {
-                if (v != null && !"".equals(v)) {
+                if (v != null) {
                     pass = true;
                     break;
                 }

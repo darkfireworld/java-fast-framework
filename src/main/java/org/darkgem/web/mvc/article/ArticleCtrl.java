@@ -1,4 +1,4 @@
-package org.darkgem.web.mvc.main;
+package org.darkgem.web.mvc.article;
 
 import org.darkgem.io.article.Article;
 import org.darkgem.io.article.ArticleIo;
@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
-@RequestMapping("/main/MainCtrl")
-public class MainCtrl {
+@RequestMapping("/main/ArticleCtrl")
+public class ArticleCtrl {
     @Autowired
     ArticleIo articleIo;
 

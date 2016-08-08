@@ -29,7 +29,7 @@
         </init-param>
         <init-param>
             <param-name>contextConfigLocation</param-name>
-            <param-value>org.darkgem.Conf</param-value>
+            <param-value>org.darkgem.SpringConf</param-value>
         </init-param>
         <!--项目不支持直接的ASYNC-->
         <async-supported>false</async-supported>

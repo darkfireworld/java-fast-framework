@@ -6,12 +6,15 @@ package org.darkgem.io.article;
 public class Article {
     String id;
     String content;
-    Type type;
+    boolean rm;
+    //mybatis
+    public Article() {
+    }
 
-    public Article(String id, String content, Type type) {
+    public Article(String id, String content, boolean rm) {
         this.id = id;
         this.content = content;
-        this.type = type;
+        this.rm = rm;
     }
 
     public String getId() {
@@ -30,16 +33,11 @@ public class Article {
         this.content = content;
     }
 
-    public Type getType() {
-        return type;
+    public boolean isRm() {
+        return rm;
     }
 
-    public void setType(Type type) {
-        this.type = type;
-    }
-
-    public enum Type {
-        IT,
-        LIFT;
+    public void setRm(boolean rm) {
+        this.rm = rm;
     }
 }

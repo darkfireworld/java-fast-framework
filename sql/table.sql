@@ -25,12 +25,22 @@ DROP TABLE IF EXISTS `t_article`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `t_article` (
-  `id` varchar(45) NOT NULL,
-  `content` text NOT NULL,
-  `type` enum('LIFE','IT') NOT NULL DEFAULT 'IT',
+  `id` varchar(45) NOT NULL COMMENT 'ID',
+  `content` text NOT NULL COMMENT '文本',
+  `rm` enum('TRUE','FALSE') NOT NULL DEFAULT 'FALSE' COMMENT '是否被删除',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `t_article`
+--
+
+LOCK TABLES `t_article` WRITE;
+/*!40000 ALTER TABLE `t_article` DISABLE KEYS */;
+INSERT INTO `t_article` VALUES ('1','文章1','FALSE'),('2','文章2','TRUE');
+/*!40000 ALTER TABLE `t_article` ENABLE KEYS */;
+UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -41,4 +51,4 @@ CREATE TABLE `t_article` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-07-14 11:15:32
+-- Dump completed on 2016-08-08 16:08:21

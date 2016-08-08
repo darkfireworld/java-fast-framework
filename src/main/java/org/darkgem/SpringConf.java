@@ -42,8 +42,8 @@ import java.util.concurrent.Executors;
 @PropertySource("classpath:project.properties")
 @EnableAspectJAutoProxy(proxyTargetClass = true)
 @ComponentScan("org.darkgem")
-public class Conf {
-    static Logger logger = LoggerFactory.getLogger(Conf.class);
+public class SpringConf {
+    static Logger logger = LoggerFactory.getLogger(SpringConf.class);
 
     /**
      * 执行器配置
@@ -63,7 +63,7 @@ public class Conf {
             return new AsyncUncaughtExceptionHandler() {
                 @Override
                 public void handleUncaughtException(Throwable throwable, Method method, Object... objects) {
-                    logger.error(Conf.class.getName(), throwable);
+                    logger.error(SpringConf.class.getName(), throwable);
                 }
             };
         }

@@ -5,22 +5,33 @@
 <mapper namespace="org.darkgem.io.article.ArticleMapper">
 
     <sql id="columns">
-        id,content,type
+        id,content,rm
     </sql>
 
-    <resultMap id="resultArticle" type="org.darkgem.io.article.Article">
-        <constructor>
-            <idArg column="id" javaType="String"/>
-            <arg column="content" javaType="String"/>
-            <arg column="type" javaType="org.darkgem.io.article.Article$Type"/>
-        </constructor>
+    <resultMap id="resultMap" type="org.darkgem.io.article.Article">
+        <id column="id" property="id"/>
+        <result column="content" property="content"/>
+        <result column="rm" property="rm"/>
     </resultMap>
-    <select id="selectList" resultMap="resultArticle">
+
+    <!--获取文章列表-->
+    <select id="selectList" resultMap="resultMap">
         SELECT
-            <include refid="columns"/>
-        FROM
-            t_article
-        WHERE
-            content like #{content} and type = #{type}
+        <include refid="columns"/>
+        FROM t_article
+    </select>
+
+    <!--新增文章-->
+    <update id="insert">
+        INSERT INTO t_article(<include refid="columns"/>)
+        VALUES(#{article.id},#{article.content},#{article.rm})
+    </update>
+
+    <!--获取文章-->
+    <select id="select" resultMap="resultMap">
+        SELECT
+        <include refid="columns"/>
+        FROM t_article
+        WHERE id = #{id}
     </select>
 </mapper>

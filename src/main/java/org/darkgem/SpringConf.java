@@ -11,7 +11,7 @@ import org.mybatis.spring.mapper.MapperScannerConfigurer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.aop.interceptor.AsyncUncaughtExceptionHandler;
-import org.springframework.context.EnvironmentAware;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.*;
 import org.springframework.core.env.Environment;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
@@ -44,6 +44,17 @@ import java.util.concurrent.Executors;
 @ComponentScan("org.darkgem")
 public class SpringConf {
     static Logger logger = LoggerFactory.getLogger(SpringConf.class);
+
+    @Component
+    static class PostProcessorConf {
+        @Bean
+        public MapperScannerConfigurer mapperScannerConfigurer() {
+            MapperScannerConfigurer mapperScannerConfigurer = new MapperScannerConfigurer();
+            mapperScannerConfigurer.setBasePackage("org.darkgem.io");
+            return mapperScannerConfigurer;
+        }
+
+    }
 
     /**
      * 执行器配置
@@ -79,14 +90,9 @@ public class SpringConf {
      */
     @Component
     @EnableTransactionManagement
-    static class IoConf implements EnvironmentAware {
+    static class IoConf {
+        @Autowired
         Environment environment;
-
-        //#fix null point environment
-        @Override
-        public void setEnvironment(Environment environment) {
-            this.environment = environment;
-        }
 
         @Bean(initMethod = "init", destroyMethod = "close")
         public DataSource dataSource() throws Exception {
@@ -110,13 +116,6 @@ public class SpringConf {
             sqlSessionFactoryBean.setDataSource(dataSource);
             sqlSessionFactoryBean.setTypeHandlersPackage("org.darkgem.io");
             return sqlSessionFactoryBean;
-        }
-
-        @Bean
-        public MapperScannerConfigurer mapperScannerConfigurer() {
-            MapperScannerConfigurer mapperScannerConfigurer = new MapperScannerConfigurer();
-            mapperScannerConfigurer.setBasePackage("org.darkgem.io");
-            return mapperScannerConfigurer;
         }
 
         @Bean

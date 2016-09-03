@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 @RequestMapping("/main/ArticleCtrl")
@@ -24,6 +25,7 @@ public class ArticleCtrl {
      * </pre>
      */
     @RequestMapping("/getList")
+    @ResponseBody
     public Message getList() {
         return Message.okMessage(articleIo.selectList());
     }
@@ -39,6 +41,7 @@ public class ArticleCtrl {
      * </pre>
      */
     @RequestMapping("/get")
+    @ResponseBody
     public Message get(@RequestParam("id") String id) {
         Article article = articleIo.select(id);
         if (article == null) {
@@ -59,6 +62,7 @@ public class ArticleCtrl {
      * </pre>
      */
     @RequestMapping("/put")
+    @ResponseBody
     public Message put(@Token String token, @RequestParam("content") String content) {
         if (!"darkfireworld".equals(token)) {
             return Message.selfErrorMessage(1, "token错误");

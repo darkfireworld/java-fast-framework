@@ -1,7 +1,7 @@
 package org.darkgem;
 
 import com.alibaba.druid.pool.DruidDataSource;
-import com.alibaba.fastjson.support.spring.FastJsonJsonView;
+import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
 import org.darkgem.io.fs.FSIo;
 import org.darkgem.io.mail.MailIo;
 import org.darkgem.web.support.handler.TokenHandler;
@@ -14,6 +14,7 @@ import org.springframework.aop.interceptor.AsyncUncaughtExceptionHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.*;
 import org.springframework.core.env.Environment;
+import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.scheduling.annotation.AsyncConfigurer;
 import org.springframework.scheduling.annotation.EnableAsync;
@@ -29,7 +30,6 @@ import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import org.springframework.web.servlet.config.annotation.ViewResolverRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import javax.sql.DataSource;
@@ -141,7 +141,7 @@ public class SpringConf {
     @Component
     @EnableWebMvc
     static class SpringMvcConf extends WebMvcConfigurerAdapter {
-        //Spring MVC
+        // 上传组件
         @Bean
         public MultipartResolver multipartResolver() {
             CommonsMultipartResolver commonsMultipartResolver = new CommonsMultipartResolver();
@@ -149,32 +149,29 @@ public class SpringConf {
             return commonsMultipartResolver;
         }
 
+        // 参数解析器
         @Override
         public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
             argumentResolvers.add(new TokenHandler());
         }
 
+        // MessageConverter Support for @RequestBody, etc
+        @Override
+        public void extendMessageConverters(List<HttpMessageConverter<?>> converters) {
+            // 添加JSON支持
+            converters.add(new FastJsonHttpMessageConverter());
+        }
+
+        // 默认Servlet支持
         @Override
         public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
             configurer.enable();
         }
 
-        @Override
-        public void configureViewResolvers(ViewResolverRegistry registry) {
-            registry.order(1);
-
-            FastJsonJsonView fastJsonJsonView = new FastJsonJsonView();
-            fastJsonJsonView.setExtractValueFromSingleKeyModel(true);
-
-            registry.enableContentNegotiation(fastJsonJsonView);
-
-        }
-
+        // 异常处理器
         @Override
         public void configureHandlerExceptionResolvers(List<HandlerExceptionResolver> exceptionResolvers) {
             exceptionResolvers.add(new MessageExceptionHandler());
         }
     }
-
-
 }

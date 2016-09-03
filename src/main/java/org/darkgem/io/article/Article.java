@@ -7,6 +7,7 @@ public class Article {
     String id;
     String content;
     boolean rm;
+
     //mybatis
     public Article() {
     }
